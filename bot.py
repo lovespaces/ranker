@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-TOKEN = os.getenv("TOKEN")
+TOKEN = os.getenv("DISCORD_TOKEN")
 if TOKEN is None:
-    raise ValueError("TOKEN is unknown.")
+    raise ValueError("DISCORD_TOKEN is unknown.")
 
 intents = discord.Intents.all()
 

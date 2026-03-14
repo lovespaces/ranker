@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-editable = os.getenv("EDITABLE_ROLE_ID")
+editable = os.getenv("DISCORD_EDITABLE_ROLE_ID")
 if editable is None:
-    raise ValueError("EDITABLE_ROLE_ID is unknown.")
+    raise ValueError("DISCORD_EDITABLE_ROLE_ID is unknown.")
 
 
 class UserManage(commands.Cog):
