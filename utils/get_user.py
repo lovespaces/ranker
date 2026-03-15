@@ -2,7 +2,7 @@ from utils.db.connection import get_session
 from utils.db.models import Users
 
 
-def GetUser(userid: int):
+def GetUser(userid: int) -> Users:
     with get_session() as session:
         user = session.query(Users).filter_by(id=userid).first()
 
@@ -10,4 +10,4 @@ def GetUser(userid: int):
             user = Users(id=userid, points=0, rank_id=1)
             session.add(user)
 
-        return user
+    return user

@@ -1,14 +1,11 @@
 from utils.db.connection import get_session
-from utils.db.models import Ranks
+from utils.db.models import Ranks, Users
 from utils.get_user import GetUser
 
 
-def AddPoints(userid: int, hits: int, kills: int, kill_first: bool):
+def AddPoints(userid: int, points: int) -> Users:
     user = GetUser(userid)
-    incr_points = 0
-    incr_points += hits + kills
-
-    user.points += incr_points
+    user.points = points
 
     with get_session() as session:
         user = session.merge(user)
