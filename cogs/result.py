@@ -8,7 +8,6 @@ from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
 from utils.get_role import GetRole
-from utils.modify_roles import ModifyRoles
 
 # ui import
 from ui.base_layout import BaseLayout
@@ -56,12 +55,16 @@ class ResultCmd(commands.Cog):
             await interaction.followup.send("❗ ランク管理ができるロールを持っていません")
             return
         was_first = False
-        top_user = GetLeaderboard(1)[0]
-        if selector.id == top_user.id and leaderboard > 1:
-            was_first = True
+        try:
+            # top_user = GetLeaderboard(1)[0]
+            # if selector.id == top_user.id and leaderboard > 1:
+            #    was_first = True
+            was_first = False
+        except IndexError:
+            pass
 
         points = Calc(hits, kills, killed_first, is_last, was_first)
-
+        print(f"Total points: {points}")
         old_user = GetUser(selector.id)
         new_user = AddPoints(selector.id, points)
 
@@ -72,14 +75,21 @@ class ResultCmd(commands.Cog):
         container.add_item(PointsDiff(old_points=old_user.points, new_points=new_user.points))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         if old_user.rank_id != new_user.rank_id:
-            old_role, new_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
-            if old_role is None or new_role is None:
+            if old_user.rank_id == -1:
+                old_role = None
+                new_role = GetRole([new_user.rank_id], interaction.guild)[0]
+            else:
+                old_role, new_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
+            if (old_role is None and old_user.rank_id != -1) or new_role is None:
                 await interaction.followup.send(
                     "❗ ロールを付与できませんでした。\nランク用のロールが削除されているか、存在しません。"
                 )
                 return
+            # 何故か既存ユーザーのremoveもaddも行われないし例外処理もエラーもない
             try:
-                await ModifyRoles(old_role, new_role, interaction.guild, selector)
+                if old_role is not None:
+                    await selector.remove_roles(old_role)
+                await selector.add_roles(new_role)
             except discord.Forbidden:
                 await interaction.followup.send(
                     "❗ ロールを付与できませんでした。\n付与するランクロールがボットのロールの下にあることを確認してください。"
@@ -88,11 +98,17 @@ class ResultCmd(commands.Cog):
             except discord.HTTPException:
                 await interaction.followup.send("❗ ロールを付与できませんでした。\n通信に失敗しました。")
                 return
-            container.add_item(ChangesRls(old_role_id=old_role.id, new_role_id=new_role.id, is_changed=True))
+            if old_role is None:
+                container.add_item(ChangesRls(new_role_id=new_role.id, is_new=True, is_changed=True))
+            else:
+                container.add_item(
+                    ChangesRls(old_role_id=old_role.id, new_role_id=new_role.id, is_new=False, is_changed=True)
+                )
         else:
-            container.add_item(ChangesRls(is_changed=True))
+            container.add_item(ChangesRls(is_changed=False))
 
         view.add_item(container)
+        await interaction.followup.send("✅ リザルトを登録しました")
         await interaction.followup.send(view=view)
 
 

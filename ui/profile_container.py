@@ -1,10 +1,10 @@
 import discord
 from discord import ui
-from utils.db.models import Users
+from utils.db.schemas import UsersSc
 
 
 class UserSec(ui.Section):
-    def __init__(self, user: Users, guild: discord.Guild, id: int | None = None) -> None:
+    def __init__(self, user: UsersSc, guild: discord.Guild, id: int | None = None) -> None:
         discord_user = guild.get_member(user.id)
         assert discord_user is not None
         if user.game_username is None:
