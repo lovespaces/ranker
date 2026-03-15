@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, ForeignKey, Text
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from ..base import Base
+from utils.db.base import Base
 
 
 class Users(Base):

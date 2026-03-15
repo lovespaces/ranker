@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, Text, Column, Integer
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from ..base import Base
+from utils.db.base import Base
 
 
 class Ranks(Base):
