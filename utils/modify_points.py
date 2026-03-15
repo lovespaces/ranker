@@ -14,4 +14,5 @@ def AddPoints(userid: int, points: int) -> Users:
         if rank is not None:
             if user.rank_id != rank:
                 user.rank_id = rank
+
     return user

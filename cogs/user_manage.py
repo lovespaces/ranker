@@ -26,15 +26,17 @@ class UserManage(commands.Cog):
         対象ユーザー: discord.User | discord.Member | None = None,
     ):
         await interaction.response.defer(thinking=True, ephemeral=True)
-        if not isinstance(interaction.user, discord.Member):
+        if not isinstance(interaction.user, discord.Member) or not isinstance(interaction.guild, discord.Guild):
             return
         if 対象ユーザー is None:
             対象ユーザー = interaction.user
-        if editable not in interaction.user.roles:
+        assert editable is not None
+        editable_role = interaction.guild.get_role(int(editable))
+        if editable_role not in interaction.user.roles:
             await interaction.followup.send("❗ ランク管理ができるロールを持っていません")
             return
 
-        user = AddPoints(対象ユーザー.id, 追加ポイント)
+        AddPoints(対象ユーザー.id, 追加ポイント)
 
         await interaction.followup.send("✅ 登録が完了しました")
 
