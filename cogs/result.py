@@ -8,13 +8,14 @@ from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
 from utils.get_role import GetRole
-from utils.get_rank import GetRank
 
 # ui import
 from ui.base_layout import BaseLayout
 from ui.profile_container import UserSec
 from ui.points_difference import PointsDiff
 from ui.roles_changes import ChangesRls
+from ui.command_user import Commander
+from ui.new_user import NewUserNofitication
 
 from dotenv import load_dotenv
 import os
@@ -41,7 +42,6 @@ class ResultCmd(commands.Cog):
         killed_first: bool = False,
         is_last: bool = False,
     ):
-        await interaction.response.defer(thinking=True, ephemeral=True)
         if selector is None:
             selector = interaction.user
         if (
@@ -50,6 +50,7 @@ class ResultCmd(commands.Cog):
             or not isinstance(selector, discord.Member)
         ):
             return
+        await interaction.response.defer(thinking=True, ephemeral=True)
         assert editable is not None
         editable_role = interaction.guild.get_role(int(editable))
         if editable_role not in interaction.user.roles:
@@ -110,7 +111,11 @@ class ResultCmd(commands.Cog):
                 )
         else:
             container.add_item(ChangesRls(is_changed=False))
-
+        if old_user.rank_id == -1:
+            container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
+            container.add_item(NewUserNofitication())
+        container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
+        container.add_item(Commander(interaction.user.mention))
         view.add_item(container)
         await interaction.followup.send("✅ リザルトを登録しました")
         if not isinstance(interaction.channel, discord.abc.Messageable):
