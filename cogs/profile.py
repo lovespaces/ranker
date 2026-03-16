@@ -4,10 +4,13 @@ from discord import app_commands
 
 # utils import
 from utils.get_user import GetUser
+from utils.get_rank import GetRanks
+from utils.get_count import RanksCount
 
 # ui import
 from ui.base_layout import BaseLayout
 from ui.profile_container import UserSec
+from ui.rank_progress import RankProgSec
 from ui.new_user import NewUserNofitication
 
 
@@ -24,9 +27,19 @@ class ProfileCmd(commands.Cog):
             return
         await interaction.response.defer(thinking=True)
         user = GetUser(selector.id)
+        rank_count = RanksCount()
+        is_non = False
+        if user.rank_id == -1:
+            is_non = True
+        elif user.rank_id + 1 == rank_count:
+            rank = GetRanks([user.rank_id])[0]
+        else:
+            rank, new_rank = GetRanks([user.rank_id, user.rank_id + 1])
         view = BaseLayout()
         container = discord.ui.Container()
         container.add_item(UserSec(user, interaction.guild))
+        container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
+        container.add_item(RankProgSec(is_non=is_non, rank=rank, next_rank=new_rank, points=user.points))
         if user.rank_id == -1:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
             container.add_item(NewUserNofitication())

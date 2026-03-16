@@ -1,9 +1,9 @@
 import discord
-from utils.db.connection import get_session
-from utils.db.models import Ranks
+from utils.get_rank import GetRanks
 
 
 def GetRole(rank_ids: list[int], guild: discord.Guild) -> list[discord.Role | None]:
-    with get_session() as session:
-        rank_role_ids = session.query(Ranks.role_id).filter(Ranks.id.in_(rank_ids)).all()
-        return [guild.get_role(role.role_id) for role in rank_role_ids]
+    ranks = GetRanks(rank_ids)
+    if ranks is None:
+        return []
+    return [guild.get_role(rank.id) for rank in ranks]

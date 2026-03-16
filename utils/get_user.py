@@ -12,3 +12,12 @@ def GetUser(userid: int) -> UsersSc:
             session.add(user)
 
         return UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username)
+
+
+# 新規登録、でけません。
+def GetUsers(userids: list[int]) -> list[UsersSc] | None:
+    with get_session() as session:
+        users = session.query(Users).filter(Users.id.in_(userids)).all()
+        if users is None:
+            return None
+        return [UsersSc(user.id, user.points, user.rank_id, user.game_username) for user in users]

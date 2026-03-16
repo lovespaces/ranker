@@ -7,6 +7,7 @@ from utils.get_user import GetUser
 from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
+from utils.get_rank import GetRanks
 from utils.get_role import GetRole
 
 # ui import
