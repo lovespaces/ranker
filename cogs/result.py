@@ -8,6 +8,7 @@ from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
 from utils.get_role import GetRole
+from utils.get_rank import GetRank
 
 # ui import
 from ui.base_layout import BaseLayout
@@ -73,11 +74,14 @@ class ResultCmd(commands.Cog):
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         container.add_item(PointsDiff(old_points=old_user.points, new_points=new_user.points))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
+        is_demote = False
         if old_user.rank_id != new_user.rank_id:
             if old_user.rank_id == -1:
                 old_role = None
                 new_role = GetRole([new_user.rank_id], interaction.guild)[0]
             else:
+                if old_user.rank_id > new_user.rank_id:
+                    is_demote = True
                 new_role, old_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
             if (old_role is None and old_user.rank_id != -1) or new_role is None:
                 await interaction.followup.send(
@@ -97,7 +101,9 @@ class ResultCmd(commands.Cog):
                 await interaction.followup.send("❗ ロールを付与できませんでした。\n通信に失敗しました。")
                 return
             if old_role is None:
-                container.add_item(ChangesRls(new_role_id=new_role.id, is_new=True, is_changed=True))
+                container.add_item(
+                    ChangesRls(new_role_id=new_role.id, is_new=True, is_changed=True, is_demote=is_demote)
+                )
             else:
                 container.add_item(
                     ChangesRls(old_role_id=old_role.id, new_role_id=new_role.id, is_new=False, is_changed=True)
@@ -108,9 +114,9 @@ class ResultCmd(commands.Cog):
         view.add_item(container)
         await interaction.followup.send("✅ リザルトを登録しました")
         if not isinstance(interaction.channel, discord.abc.Messageable):
-            await interaction.followup.send(view=view)
+            await interaction.followup.send(view=view, allowed_mentions=discord.AllowedMentions.none())
         else:
-            await interaction.channel.send(view=view)
+            await interaction.channel.send(view=view, allowed_mentions=discord.AllowedMentions.none())
 
 
 async def setup(bot):

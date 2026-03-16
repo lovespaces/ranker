@@ -10,12 +10,16 @@ class ChangesRls(ui.TextDisplay):
         new_role_id: int | None = None,
         is_changed: bool,
         is_new: bool = False,
+        is_demote: bool = False,
     ) -> None:
+        changed = "昇格"
+        if is_demote:
+            changed = "降格"
         if is_changed:
             if is_new:
                 content = f"## ランク付与\n- <@&{new_role_id}> 付与"
             else:
-                content = f"## ランク変化\n- <@&{old_role_id}> 解除\n- <@&{new_role_id}> 付与"
+                content = f"## ランク{changed}\n- <@&{old_role_id}> 解除\n- <@&{new_role_id}> 付与"
         else:
             content = "__**ランク変化なし**__"
 
