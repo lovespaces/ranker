@@ -12,10 +12,9 @@ def AddPoints(userid: int, points: int) -> UsersSc:
         if user is None:
             raise ValueError("User was not found.")
         user.points += points
-        print(user.points)
         rank = (
             session.query(Ranks.id)
-            .filter(Ranks.required_points <= user.points)
+            .filter(Ranks.required_points <= user.points, Ranks.id > user.rank_id)
             .order_by(Ranks.required_points.asc())
             .limit(1)
             .scalar()

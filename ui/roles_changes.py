@@ -17,6 +17,6 @@ class ChangesRls(ui.TextDisplay):
             else:
                 content = f"## ランク変化\n- <@&{old_role_id}> 解除\n- <@&{new_role_id}> 付与"
         else:
-            content = "__**変化なし**__"
+            content = "__**ランク変化なし**__"
 
         super().__init__(content, id=id)

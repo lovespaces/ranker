@@ -56,15 +56,14 @@ class ResultCmd(commands.Cog):
             return
         was_first = False
         try:
-            # top_user = GetLeaderboard(1)[0]
-            # if selector.id == top_user.id and leaderboard > 1:
-            #    was_first = True
+            top_user = GetLeaderboard(1)[0]
+            if selector.id == top_user.id and leaderboard > 1:
+                was_first = True
             was_first = False
         except IndexError:
             pass
 
         points = Calc(hits, kills, killed_first, is_last, was_first)
-        print(f"Total points: {points}")
         old_user = GetUser(selector.id)
         new_user = AddPoints(selector.id, points)
 
@@ -79,13 +78,12 @@ class ResultCmd(commands.Cog):
                 old_role = None
                 new_role = GetRole([new_user.rank_id], interaction.guild)[0]
             else:
-                old_role, new_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
+                new_role, old_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
             if (old_role is None and old_user.rank_id != -1) or new_role is None:
                 await interaction.followup.send(
                     "❗ ロールを付与できませんでした。\nランク用のロールが削除されているか、存在しません。"
                 )
                 return
-            # 何故か既存ユーザーのremoveもaddも行われないし例外処理もエラーもない
             try:
                 if old_role is not None:
                     await selector.remove_roles(old_role)
@@ -109,7 +107,10 @@ class ResultCmd(commands.Cog):
 
         view.add_item(container)
         await interaction.followup.send("✅ リザルトを登録しました")
-        await interaction.followup.send(view=view)
+        if not isinstance(interaction.channel, discord.abc.Messageable):
+            await interaction.followup.send(view=view)
+        else:
+            await interaction.channel.send(view=view)
 
 
 async def setup(bot):
