@@ -22,7 +22,6 @@ def AddPoints(userid: int, points: int) -> UsersSc:
         )
         rank = session.execute(query).scalar()
         if rank is not None:
-            print(rank)
             if user.rank_id != rank:
                 user.rank_id = rank
 

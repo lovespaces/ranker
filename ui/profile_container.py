@@ -9,7 +9,6 @@ class UserSec(ui.Section):
         discord_user = guild.get_member(user.id)
         assert discord_user is not None
         rank = GetRank(user.rank_id)
-        print(rank)
         if rank is None:
             rank_name = "存在しないランク"
         else:

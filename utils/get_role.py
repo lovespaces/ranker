@@ -6,4 +6,5 @@ def GetRole(rank_ids: list[int], guild: discord.Guild) -> list[discord.Role | No
     ranks = GetRanks(rank_ids)
     if ranks is None:
         return []
-    return [guild.get_role(rank.id) for rank in ranks]
+
+    return [guild.get_role(rank.role_id) for rank in ranks]

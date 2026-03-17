@@ -22,7 +22,7 @@ def GetUser(userid: int) -> tuple[UsersSc, bool]:
 def GetUsers(userids: list[int]) -> list[UsersSc] | None:
     with get_session() as session:
         query = select(Users).where(Users.id.in_(userids))
-        users = session.execute(query).all()
+        users = session.execute(query).scalars().all()
         if users is None:
             return None
         return [UsersSc(user.id, user.points, user.rank_id, user.game_username) for user in users]

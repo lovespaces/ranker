@@ -16,5 +16,5 @@ def GetRank(rank_id: int) -> RanksSc | None:
 def GetRanks(rank_ids: list[int]) -> list[RanksSc]:
     with get_session() as session:
         query = select(Ranks).where(Ranks.id.in_(rank_ids)).order_by(Ranks.required_points.asc())
-        ranks = session.execute(query).all()
+        ranks = session.execute(query).scalars().all()
         return [RanksSc(rank.id, rank.rank_name, rank.role_id, rank.required_points) for rank in ranks]

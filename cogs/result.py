@@ -67,7 +67,7 @@ class ResultCmd(commands.Cog):
             pass
 
         points = Calc(hits, kills, killed_first, is_last, was_first)
-        old_user = GetUser(selector.id)
+        old_user, new_user = GetUser(selector.id)
         new_user = AddPoints(selector.id, points)
 
         view = BaseLayout()
@@ -112,7 +112,7 @@ class ResultCmd(commands.Cog):
                 )
         else:
             container.add_item(ChangesRls(is_changed=False))
-        if old_user.rank_id == -1:
+        if new_user:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
             container.add_item(NewUserNofitication())
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))

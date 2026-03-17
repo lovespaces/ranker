@@ -11,7 +11,7 @@ def GetLeaderboard(limit: int = -1) -> list[UsersSc]:
             query = select(Users).where(Users.points < 0, Users.rank_id <= 1).order_by(Users.points.desc())
         else:
             query = select(Users).where(Users.points < 0, Users.rank_id <= 1).order_by(Users.points.desc()).limit(limit)
-        users = session.execute(query).all()
+        users = session.execute(query).scalars().all()
         if not users:
             return []
         return [
