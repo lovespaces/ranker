@@ -9,6 +9,6 @@ class Users(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     points: Mapped[int] = mapped_column(nullable=False)
     rank_id: Mapped[int] = mapped_column(ForeignKey("ranks.id"), nullable=False)
-    game_username: Mapped[str] = mapped_column(Text, unique=True)
+    game_username: Mapped[str | None] = mapped_column(Text, unique=True, nullable=True)
 
     rank = relationship("Ranks", back_populates="user")

@@ -19,7 +19,7 @@ class RankProgSec(ui.TextDisplay):
         elif rank is not None:
             if next_rank is None:
                 if rank == 0:
-                    content += f"```{rank.rank_name} ... 最高ランク\n{points}P```"
+                    content += f"```{rank.rank_name}\n{points}P , ✨最高ランクです✨```"
                 else:
                     raise ValueError("Next rank is 'None' and current rank is not the highest.")
             else:

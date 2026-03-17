@@ -7,8 +7,9 @@ from utils.get_user import GetUser
 from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
-from utils.get_rank import GetRanks
 from utils.get_role import GetRole
+
+from utils.types.log import LogType
 
 # ui import
 from ui.base_layout import BaseLayout
@@ -16,7 +17,7 @@ from ui.profile_container import UserSec
 from ui.points_difference import PointsDiff
 from ui.roles_changes import ChangesRls
 from ui.command_user import Commander
-from ui.new_user import NewUserNofitication
+from ui.nofitication import Nofitication
 
 from dotenv import load_dotenv
 import os
@@ -113,8 +114,8 @@ class ResultCmd(commands.Cog):
         else:
             container.add_item(ChangesRls(is_changed=False))
         if is_new:
-            container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
-            container.add_item(NewUserNofitication())
+            container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
+            container.add_item(Nofitication(log=LogType.NEWUSER))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
         container.add_item(Commander(interaction.user.mention))
         view.add_item(container)
