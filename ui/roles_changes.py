@@ -12,14 +12,16 @@ class ChangesRls(ui.TextDisplay):
         is_new: bool = False,
         is_demote: bool = False,
     ) -> None:
+        emoji = "📈"
         changed = "昇格"
         if is_demote:
+            emoji = "📉"
             changed = "降格"
         if is_changed:
             if is_new:
-                content = f"## ランク付与\n- <@&{new_role_id}> 付与"
+                content = f"## 📍 ランク付与\n- <@&{new_role_id}> 付与"
             else:
-                content = f"## ランク{changed}\n- <@&{old_role_id}> 解除\n- <@&{new_role_id}> 付与"
+                content = f"## {emoji} ランク{changed}\n- <@&{old_role_id}> 解除\n- <@&{new_role_id}> 付与"
         else:
             content = "__**ランク変化なし**__"
 

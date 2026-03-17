@@ -67,7 +67,7 @@ class ResultCmd(commands.Cog):
             pass
 
         points = Calc(hits, kills, killed_first, is_last, was_first)
-        old_user, new_user = GetUser(selector.id)
+        old_user, is_new = GetUser(selector.id)
         new_user = AddPoints(selector.id, points)
 
         view = BaseLayout()
@@ -84,7 +84,7 @@ class ResultCmd(commands.Cog):
             else:
                 if old_user.rank_id > new_user.rank_id:
                     is_demote = True
-                new_role, old_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
+                old_role, new_role = GetRole([old_user.rank_id, new_user.rank_id], interaction.guild)
             if (old_role is None and old_user.rank_id != -1) or new_role is None:
                 await interaction.followup.send(
                     "❗ ロールを付与できませんでした。\nランク用のロールが削除されているか、存在しません。"
@@ -112,7 +112,7 @@ class ResultCmd(commands.Cog):
                 )
         else:
             container.add_item(ChangesRls(is_changed=False))
-        if new_user:
+        if is_new:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
             container.add_item(NewUserNofitication())
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
