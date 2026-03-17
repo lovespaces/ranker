@@ -4,6 +4,9 @@ from discord.ext.commands import Context, Greedy
 from typing import Literal, Optional
 from dotenv import load_dotenv
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")

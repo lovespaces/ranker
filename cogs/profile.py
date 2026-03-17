@@ -23,12 +23,19 @@ class ProfileCmd(commands.Cog):
     async def profile(self, interaction: discord.Interaction, selector: discord.User | discord.Member | None = None):
         if selector is None:
             selector = interaction.user
+        if selector.bot:
+            await interaction.response.send_message(
+                "ボットの情報は保存されていません。ユーザを選んでください。", ephemeral=True
+            )
+            return
         if not isinstance(selector, discord.Member) or not isinstance(interaction.guild, discord.Guild):
             return
         await interaction.response.defer(thinking=True)
-        user = GetUser(selector.id)
+        user, new_user = GetUser(selector.id)
         rank_count = RanksCount()
         is_non = False
+        rank = None
+        new_rank = None
         if user.rank_id == -1:
             is_non = True
         elif user.rank_id + 1 == rank_count:
@@ -40,7 +47,7 @@ class ProfileCmd(commands.Cog):
         container.add_item(UserSec(user, interaction.guild))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         container.add_item(RankProgSec(is_non=is_non, rank=rank, next_rank=new_rank, points=user.points))
-        if user.rank_id == -1:
+        if new_user == -1:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
             container.add_item(NewUserNofitication())
         view.add_item(container)

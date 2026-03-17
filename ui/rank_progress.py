@@ -24,7 +24,7 @@ class RankProgSec(ui.TextDisplay):
                     raise ValueError("Next rank is 'None' and current rank is not the highest.")
             else:
                 require = next_rank.required_points - points
-                content += f"```{rank.rank_name} -> {next_rank.rank_name}\n{points}P , 次ランクまで: {require}P```"
+                content += f"\n```{rank.rank_name} -> {next_rank.rank_name}\n{points}P , 次ランクまで: {require}P```"
         else:
             raise ValueError("Current rank is unavailable")
         super().__init__(content, id=id)

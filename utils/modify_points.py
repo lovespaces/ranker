@@ -2,24 +2,27 @@ from utils.db.connection import get_session
 from utils.db.models import Ranks, Users
 from utils.get_user import GetUser
 from utils.db.schemas import UsersSc
+from sqlalchemy import select, func
 
 
 def AddPoints(userid: int, points: int) -> UsersSc:
     GetUser(userid)
 
     with get_session() as session:
-        user = session.query(Users).filter_by(id=userid).first()
+        query = select(Users).where(Users.id == userid)
+        user = session.execute(query).scalar()
         if user is None:
             raise ValueError("User was not found.")
         user.points += points
-        rank = (
-            session.query(Ranks.id)
-            .filter(Ranks.required_points <= user.points, Ranks.id != user.rank_id, Ranks.id != -1)
-            .order_by(Ranks.required_points.asc())
-            .limit(1)
-            .scalar()
+        if user.points < 0:
+            user.points = 0
+
+        query = select(func.max(Ranks.id)).where(
+            Ranks.required_points <= user.points, Ranks.id != user.rank_id, Ranks.id != -1
         )
+        rank = session.execute(query).scalar()
         if rank is not None:
+            print(rank)
             if user.rank_id != rank:
                 user.rank_id = rank
 

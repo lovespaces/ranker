@@ -23,6 +23,12 @@ class LeaderboardCmd(commands.Cog):
         view = BaseLayout()
         container = discord.ui.Container()
         container.add_item(LeaderboardSec(users=GetLeaderboard()))
+        container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
+        container.add_item(discord.ui.TextDisplay("### 未プレイのユーザーは表示されません。"))
         view.add_item(container)
 
         await interaction.followup.send(view=view)
+
+
+async def setup(bot):
+    await bot.add_cog(LeaderboardCmd(bot))

@@ -1,15 +1,17 @@
 from utils.db.connection import get_session
 from utils.db.models import Users
 from utils.db.schemas import UsersSc
+from sqlalchemy import select
 
 
 # UsersScに対応
 def GetLeaderboard(limit: int = -1) -> list[UsersSc]:
     with get_session() as session:
         if limit == -1:
-            users = session.query(Users).order_by(Users.points.desc()).all()
+            query = select(Users).where(Users.points < 0, Users.rank_id <= 1).order_by(Users.points.desc())
         else:
-            users = session.query(Users).order_by(Users.points.desc()).limit(limit).all()
+            query = select(Users).where(Users.points < 0, Users.rank_id <= 1).order_by(Users.points.desc()).limit(limit)
+        users = session.execute(query).all()
         if not users:
             return []
         return [
