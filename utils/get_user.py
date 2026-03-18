@@ -15,7 +15,7 @@ def GetUser(userid: int) -> tuple[UsersSc, bool]:
             session.add(user)
             new_user = True
 
-        return UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username), new_user
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username), new_user
 
 
 # 新規登録、でけません。
@@ -26,3 +26,12 @@ def GetUsers(userids: list[int]) -> list[UsersSc] | None:
         if users is None:
             return None
         return [UsersSc(user.id, user.points, user.rank_id, user.game_username) for user in users]
+
+
+def GetUserWithoutCreation(userid: int) -> UsersSc | None:
+    with get_session() as session:
+        query = select(Users).where(Users.id == userid)
+        user = session.execute(query).scalar()
+        if user is None:
+            return None
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username)

@@ -46,8 +46,8 @@ class SetCmd(commands.Cog):
             assert editable is not None
             editable_role = interaction.guild.get_role(int(editable))
             if editable_role not in interaction.user.roles:
-                await interaction.followup.send(
-                    "❗ 他ユーザーの管理ができるロールを持っていません\n自分のMCIDのみ設定できます"
+                await interaction.response.send_message(
+                    "❗ 他ユーザーの管理ができるロールを持っていません\n自分のMCIDのみ設定できます", ephemeral=True
                 )
                 return
         if not isinstance(selector, discord.Member) or not isinstance(interaction.guild, discord.Guild):
@@ -58,7 +58,8 @@ class SetCmd(commands.Cog):
         if not result:
             exist_user = interaction.guild.get_member(new_user.id)
             await interaction.followup.send(
-                f"❗ 他のユーザーに同じMCIDの人がいます: {exist_user.mention if exist_user else f'ID: ({result})'}"
+                f"❗ 他のユーザーに同じMCIDの人がいます: {exist_user.mention if exist_user else f'ID: ({result})'}",
+                ephemeral=True,
             )
             return
         view = BaseLayout()
@@ -71,6 +72,9 @@ class SetCmd(commands.Cog):
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
             container.add_item(Nofitication(log=LogType.CHANGED_MCID))
         view.add_item(container)
+
+        await interaction.followup.send("✅ 設定が完了しました")
+        await interaction.followup.send(view=view)
 
 
 async def setup(bot):

@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 # utils import
-from utils.get_user import GetUser
+from utils.get_user import GetUser, GetUserWithoutCreation
 from utils.get_rank import GetRank, GetRanks
 from utils.get_count import RanksCount
 
@@ -32,8 +32,17 @@ class ProfileCmd(commands.Cog):
             return
         if not isinstance(selector, discord.Member) or not isinstance(interaction.guild, discord.Guild):
             return
-        await interaction.response.defer(thinking=True)
-        user, new_user = GetUser(selector.id)
+        await interaction.response.defer(thinking=True, ephemeral=True)
+        new_user = False
+        if interaction.user == selector:
+            user, new_user = GetUser(selector.id)
+        else:
+            user = GetUserWithoutCreation(selector.id)
+            if user is None:
+                await interaction.followup.send(
+                    "❗ 選択したユーザーの情報が取得できませんでした。\nデータベースに登録されていません。"
+                )
+                return
         rank_count = RanksCount()
         is_non = False
         rank = None
@@ -49,7 +58,7 @@ class ProfileCmd(commands.Cog):
         container.add_item(UserSec(user, interaction.guild))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         container.add_item(RankProgSec(is_non=is_non, rank=rank, next_rank=new_rank, points=user.points))
-        if new_user == -1:
+        if new_user:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
             container.add_item(Nofitication(log=LogType.NEWUSER))
         view.add_item(container)
