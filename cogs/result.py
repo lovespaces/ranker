@@ -38,7 +38,7 @@ class ResultCmd(commands.Cog):
     @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
     @app_commands.describe(hits="プレイヤーのヒット数を入力")
     @app_commands.describe(kills="プレイヤーのキル数を入力")
-    @app_commands.describe(killed_first="総合ランキングトップをキルした場合はTrue")
+    @app_commands.describe(killed_first="総合ランキングのトップをキルした場合はTrue")
     @app_commands.describe(is_last="最下位の場合はTrue")
     @app_commands.guild_only()
     async def result(
