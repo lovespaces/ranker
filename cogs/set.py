@@ -27,8 +27,9 @@ class SetCmd(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="set", description="プレイヤーの登録／MCIDの設定")
-    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
-    @app_commands.describe(mcid="他メンバーと同じMCIDの設定はできません")
+    @app_commands.describe(
+        selector="プレイヤーを選ばない場合は自分が対象になります", mcid="他メンバーと同じMCIDの設定はできません"
+    )
     @app_commands.guild_only()
     async def set_(
         self,
