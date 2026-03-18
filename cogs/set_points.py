@@ -14,9 +14,9 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-editable = os.getenv("EDITABLE_ROLE_ID")
+editable = os.getenv("DISCORD_EDITABLE_ROLE_ID")
 if editable is None:
-    raise ValueError("EDITABLE_ROLE_ID is unavailable")
+    raise ValueError("DISCORD_EDITABLE_ROLE_ID is unavailable")
 
 
 class SetPointsCmd(commands.Cog):
@@ -77,3 +77,7 @@ class SetPointsCmd(commands.Cog):
                 await interaction.followup.send("❗ ロールを付与できませんでした。\n通信に失敗しました。")
                 return
         await interaction.followup.send(content, allowed_mentions=discord.AllowedMentions.none())
+
+
+async def setup(bot):
+    await bot.add_cog(SetPointsCmd(bot))

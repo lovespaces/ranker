@@ -74,7 +74,6 @@ class ResultCmd(commands.Cog):
             was_first = False
         except IndexError:
             pass
-
         points = Calc(hits, kills, killed_first, is_last, was_first)
         old_user, is_new = GetUser(selector.id)
         new_user = AddPoints(selector.id, points)
@@ -85,7 +84,15 @@ class ResultCmd(commands.Cog):
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         container.add_item(GameResult(leaderboard=leaderboard, hits=hits, kills=kills))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
-        container.add_item(PointsDiff(old_points=old_user.points, new_points=new_user.points))
+        container.add_item(
+            PointsDiff(
+                old_points=old_user.points,
+                new_points=new_user.points,
+                killed_first=killed_first,
+                is_last=is_last,
+                was_first=was_first,
+            )
+        )
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         is_demote = False
         if old_user.rank_id != new_user.rank_id:

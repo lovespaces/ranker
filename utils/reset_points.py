@@ -14,6 +14,6 @@ def ResetPoints(userid: int) -> UsersSc:
         if user is None:
             raise ValueError("User was not found.")
         user.points = 0
-        user.rank_id = 0
+        user.rank_id = 1
 
         return UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username)

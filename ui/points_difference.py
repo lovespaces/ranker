@@ -13,7 +13,6 @@ class PointsDiff(ui.TextDisplay):
         was_first: bool = False,
     ) -> None:
         super().__init__(content="", id=id)
-
         differences = new_points - old_points
         sign = ""
         if differences == 0:
@@ -29,5 +28,5 @@ class PointsDiff(ui.TextDisplay):
                 differences += 3
                 sign += "\n- 3 (RANKING LOSS PENALTY)"
 
-            sign = f"\n+ HITS, KILLS: {abs(differences)}"
+            sign += f"\n+ HITS, KILLS: {abs(differences)}"
         self.content = f"## 🪙 ポイントの増減\n```diff\n{old_points} -> {new_points}\n{sign}\n```"
