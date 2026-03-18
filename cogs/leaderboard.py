@@ -15,7 +15,7 @@ class LeaderboardCmd(commands.Cog):
         self.bot = bot
 
     # TODO: ページ機能の追加（だるい）
-    @app_commands.command(name="top", description="hmm")
+    @app_commands.command(name="top", description="総合ポイントのランキングを表示")
     @app_commands.guild_only()
     async def top(self, interaction: discord.Interaction):
         await interaction.response.defer(thinking=True, ephemeral=True)
@@ -24,7 +24,7 @@ class LeaderboardCmd(commands.Cog):
         container = discord.ui.Container()
         container.add_item(LeaderboardSec(users=GetLeaderboard()))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
-        container.add_item(discord.ui.TextDisplay("### 未プレイのユーザーは表示されません。"))
+        container.add_item(discord.ui.TextDisplay("### 未プレイのプレイヤーは表示されません。"))
         view.add_item(container)
 
         await interaction.followup.send(view=view)

@@ -20,7 +20,8 @@ class ProfileCmd(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="profile", description="aha")
+    @app_commands.command(name="profile", description="自分／他プレイヤーのプロフィールを表示")
+    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
     @app_commands.guild_only()
     async def profile(self, interaction: discord.Interaction, selector: discord.User | discord.Member | None = None):
         if selector is None:
@@ -40,7 +41,7 @@ class ProfileCmd(commands.Cog):
             user = GetUserWithoutCreation(selector.id)
             if user is None:
                 await interaction.followup.send(
-                    "❗ 選択したユーザーの情報が取得できませんでした。\nデータベースに登録されていません。"
+                    "❗ 選択したプレイヤーの情報が取得できませんでした。\nデータベースに登録されていません。"
                 )
                 return
         rank_count = RanksCount()

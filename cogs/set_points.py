@@ -23,7 +23,9 @@ class SetPointsCmd(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="points", description="set points user !!")
+    @app_commands.command(name="points", description="プレイヤーのポイントを設定")
+    @app_commands.describe(points="マイナスを付けることでポイント減少、0でポイントをリセット")
+    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
     @app_commands.guild_only()
     async def set_points(
         self, interaction: discord.Interaction, points: int, selector: discord.User | discord.Member | None = None

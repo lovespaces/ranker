@@ -26,7 +26,9 @@ class SetCmd(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="set", description="リセットする場合は何も入力しないこと")
+    @app_commands.command(name="set", description="プレイヤーの登録／MCIDの設定")
+    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
+    @app_commands.describe(mcid="他メンバーと同じMCIDの設定はできません")
     @app_commands.guild_only()
     async def set_(
         self,
@@ -58,7 +60,7 @@ class SetCmd(commands.Cog):
         if not result:
             exist_user = interaction.guild.get_member(new_user.id)
             await interaction.followup.send(
-                f"❗ 他のユーザーに同じMCIDの人がいます: {exist_user.mention if exist_user else f'ID: ({result})'}",
+                f"❗ 他のプレイヤーに同じMCIDの人がいます: {exist_user.mention if exist_user else f'ID: ({result})'}",
                 ephemeral=True,
             )
             return
