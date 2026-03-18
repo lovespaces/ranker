@@ -34,12 +34,14 @@ class ResultCmd(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="result", description="試合結果を記録")
-    @app_commands.describe(leaderboard="プレイヤーの試合順位を入力")
-    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
-    @app_commands.describe(hits="プレイヤーのヒット数を入力")
-    @app_commands.describe(kills="プレイヤーのキル数を入力")
-    @app_commands.describe(killed_first="総合ランキングのトップをキルした場合はTrue")
-    @app_commands.describe(is_last="最下位の場合はTrue")
+    @app_commands.describe(
+        leaderboard="プレイヤーの試合順位を入力",
+        selector="プレイヤーを選ばない場合は自分が対象になります",
+        hits="プレイヤーのヒット数を入力",
+        kills="プレイヤーのキル数を入力",
+        killed_first="総合ランキングのトップをキルした場合はTrue",
+        is_last="最下位の場合はTrue",
+    )
     @app_commands.guild_only()
     async def result(
         self,
