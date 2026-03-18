@@ -17,6 +17,7 @@ from ui.profile_container import UserSec
 from ui.points_difference import PointsDiff
 from ui.roles_changes import ChangesRls
 from ui.command_user import Commander
+from ui.game_result import GameResult
 from ui.nofitication import Nofitication
 
 from dotenv import load_dotenv
@@ -81,6 +82,8 @@ class ResultCmd(commands.Cog):
         view = BaseLayout()
         container = discord.ui.Container()
         container.add_item(UserSec(old_user, interaction.guild))
+        container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
+        container.add_item(GameResult(leaderboard=leaderboard, hits=hits, kills=kills))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         container.add_item(PointsDiff(old_points=old_user.points, new_points=new_user.points))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
