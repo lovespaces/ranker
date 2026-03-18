@@ -29,7 +29,6 @@ if editable is None:
     raise ValueError("DISCORD_EDITABLE_ROLE_ID is unknown")
 
 
-# TODO: game_result.pyを作ってKills, Hits, 試合の順位を表示
 class ResultCmd(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
