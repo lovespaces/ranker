@@ -76,7 +76,7 @@ class SetCmd(commands.Cog):
             container.add_item(Nofitication(log=LogType.CHANGED_MCID))
         view.add_item(container)
 
-        await interaction.followup.send(view=view, allowed_mentions=discord.AllowedMentions.none())
+        await interaction.followup.send(view=view, allowed_mentions=discord.AllowedMentions.none(), silent=True)
 
 
 async def setup(bot):

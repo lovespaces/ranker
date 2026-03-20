@@ -142,9 +142,9 @@ class ResultCmd(commands.Cog):
         view.add_item(container)
         await interaction.followup.send("✅ リザルトを登録しました")
         if not isinstance(interaction.channel, discord.abc.Messageable):
-            await interaction.followup.send(view=view, allowed_mentions=discord.AllowedMentions.none())
+            await interaction.followup.send(view=view, allowed_mentions=discord.AllowedMentions.none(), silent=True)
         else:
-            await interaction.channel.send(view=view, allowed_mentions=discord.AllowedMentions.none())
+            await interaction.channel.send(view=view, allowed_mentions=discord.AllowedMentions.none(), silent=True)
 
 
 async def setup(bot):

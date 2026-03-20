@@ -27,7 +27,7 @@ class LeaderboardCmd(commands.Cog):
         container.add_item(discord.ui.TextDisplay("### 未プレイのプレイヤーは表示されません。"))
         view.add_item(container)
 
-        await interaction.followup.send(view=view)
+        await interaction.followup.send(view=view, silent=True)
 
 
 async def setup(bot):

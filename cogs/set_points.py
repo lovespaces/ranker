@@ -78,7 +78,7 @@ class SetPointsCmd(commands.Cog):
             except discord.HTTPException:
                 await interaction.followup.send("❗ ロールを付与できませんでした。\n通信に失敗しました。")
                 return
-        await interaction.followup.send(content, allowed_mentions=discord.AllowedMentions.none())
+        await interaction.followup.send(content, allowed_mentions=discord.AllowedMentions.none(), silent=True)
 
 
 async def setup(bot):
