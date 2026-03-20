@@ -45,20 +45,34 @@ class ProfileCmd(commands.Cog):
                 )
                 return
         rank_count = RanksCount()
+        is_highest = False
+        is_fourth = False
         is_non = False
         rank = None
         new_rank = None
         if user.rank_id == -1:
             is_non = True
-        elif user.rank_id + 1 == rank_count:
-            rank = GetRank(user.rank_id)
+        elif user.rank_id == rank_count - 1:
+            is_fourth = True
+        elif user.rank_id == rank_count - 2:
+            is_highest = True
         else:
             rank, new_rank = GetRanks([user.rank_id, user.rank_id + 1])
+        rank = GetRank(user.rank_id)
         view = BaseLayout()
         container = discord.ui.Container()
         container.add_item(UserSec(user, interaction.guild))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
-        container.add_item(RankProgSec(is_non=is_non, rank=rank, next_rank=new_rank, points=user.points))
+        container.add_item(
+            RankProgSec(
+                is_non=is_non,
+                rank=rank,
+                next_rank=new_rank,
+                points=user.points,
+                is_highest=is_highest,
+                is_fourth=is_fourth,
+            )
+        )
         if new_user:
             container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
             container.add_item(Nofitication(log=LogType.NEWUSER))

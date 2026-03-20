@@ -8,6 +8,8 @@ class RankProgSec(ui.TextDisplay):
         self,
         *,
         is_non: bool = False,
+        is_highest: bool = False,
+        is_fourth: bool = False,
         rank: RanksSc | None,
         next_rank: RanksSc | None,
         points: int,
@@ -17,12 +19,11 @@ class RankProgSec(ui.TextDisplay):
         if is_non:
             content += "```まだ試合をしていません！```"
         elif rank is not None:
-            if next_rank is None:
-                if rank == 0:
-                    content += f"```{rank.rank_name}\n{points}P , ✨最高ランクです✨```"
-                else:
-                    raise ValueError("Next rank is 'None' and current rank is not the highest.")
-            else:
+            if is_highest:
+                content += f"\n```{rank.rank_name}\n{points}P , ✨最高ランク✨```"
+            elif is_fourth:
+                content += f"\n```{rank.rank_name}\n{points}P , ⚡四皇の一人です⚡```"
+            if next_rank is not None:
                 require = next_rank.required_points - points
                 content += f"\n```{rank.rank_name} -> {next_rank.rank_name}\n{points}P , 次ランクまで: {require}P```"
         else:

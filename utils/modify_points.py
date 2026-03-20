@@ -2,6 +2,7 @@ from utils.db.connection import get_session
 from utils.db.models import Ranks, Users
 from utils.get_user import GetUser
 from utils.db.schemas import UsersSc
+from utils.is_fourth import IsFourth
 from sqlalchemy import select, func
 
 
@@ -22,7 +23,8 @@ def AddPoints(userid: int, points: int) -> UsersSc:
         )
         rank = session.execute(query).scalar()
         if rank is not None:
-            if user.rank_id != rank:
-                user.rank_id = rank
+            if IsFourth(rank):
+                if user.rank_id != rank:
+                    user.rank_id = rank
 
         return UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username)
