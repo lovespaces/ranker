@@ -8,6 +8,7 @@ from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
 from utils.get_role import GetRole
+from utils.get_count import RanksCount
 
 from utils.types.log import LogType
 
@@ -68,15 +69,17 @@ class ResultCmd(commands.Cog):
             await interaction.followup.send("❗ ランク管理ができるロールを持っていません")
             return
         was_first = False
+        was_king = False
         try:
             top_user = GetLeaderboard(1)[0]
             if selector.id == top_user.id and leaderboard > 1:
                 was_first = True
-            was_first = False
         except IndexError:
             pass
-        points = Calc(hits, kills, killed_first, is_last, was_first)
         old_user, is_new = GetUser(selector.id)
+        if old_user.rank_id >= RanksCount() - 1:
+            was_king = True
+        points = Calc(hits, kills, killed_first, is_last, was_king, was_first)
         new_user = AddPoints(selector.id, points)
 
         view = BaseLayout()
