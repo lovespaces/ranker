@@ -43,7 +43,7 @@ class SetPointsCmd(commands.Cog):
         assert editable is not None
         editable_role = interaction.guild.get_role(int(editable))
         if editable_role not in interaction.user.roles:
-            await interaction.followup.send("❗ ランク管理ができるロールを持っていません")
+            await interaction.response.send_message("❗ ランク管理ができるロールを持っていません")
             return
         await interaction.response.defer(thinking=True)
         old_user, is_new = GetUser(selector.id)
