@@ -4,15 +4,14 @@ from utils.db.schemas import UsersSc
 from sqlalchemy import select
 
 
-# UsersScに対応
 def GetLeaderboard(limit: int = -1) -> list[UsersSc]:
     with get_session() as session:
         if limit == -1:
-            query = select(Users).where(Users.points < 0, Users.rank_id <= 1).order_by(Users.points.desc())
+            query = select(Users).where(Users.points > 0, Users.rank_id >= 1).order_by(Users.points.desc())
         else:
             query = (
                 select(Users)
-                .where(Users.points < 0, Users.rank_id <= 1)
+                .where(Users.points > 0, Users.rank_id >= 1)
                 .order_by(Users.points.desc())
                 .limit(limit=limit)
             )

@@ -22,7 +22,7 @@ class LeaderboardCmd(commands.Cog):
 
         view = BaseLayout()
         container = discord.ui.Container()
-        container.add_item(LeaderboardSec(users=GetLeaderboard()))
+        container.add_item(LeaderboardSec(users=GetLeaderboard(), userid=interaction.user.id))
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
         container.add_item(discord.ui.TextDisplay("### 未プレイのプレイヤーは表示されません。"))
         view.add_item(container)
