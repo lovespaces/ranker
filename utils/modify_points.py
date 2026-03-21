@@ -3,6 +3,7 @@ from utils.db.models import Ranks, Users
 from utils.get_user import GetUser
 from utils.db.schemas import UsersSc
 from utils.is_fourth import IsFourth
+from utils.get_count import RanksCount
 from sqlalchemy import select, func
 
 
@@ -22,8 +23,12 @@ def AddPoints(userid: int, points: int) -> UsersSc:
             Ranks.required_points <= user.points, Ranks.id != user.rank_id, Ranks.id != -1
         )
         rank = session.execute(query).scalar()
+        count = RanksCount() - 1
         if rank is not None:
-            if IsFourth(rank):
+            if rank == count:
+                if IsFourth(rank):
+                    user.rank_id = rank
+            else:
                 if user.rank_id != rank:
                     user.rank_id = rank
 

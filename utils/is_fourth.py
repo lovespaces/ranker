@@ -1,5 +1,5 @@
 from utils.db.connection import get_session
-from utils.db.models import Ranks, Users
+from utils.db.models import Users
 from utils.get_count import RanksCount
 from sqlalchemy import select, func
 
