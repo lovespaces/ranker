@@ -51,11 +51,14 @@ class SetPointsCmd(commands.Cog):
             new_user = ResetPoints(selector.id)
         else:
             new_user = AddPoints(selector.id, points)
+        print(new_user.rank_id)
+        print(old_user.rank_id)
         difference = new_user.points - old_user.points
         content = f"{selector.mention} のポイントを変更しました。\n```{old_user.points} -> {new_user.points} ({'+' if difference > 0 else '-' if difference < 0 else '±'} {abs(difference)})```"
         if is_new:
             content = f"\n❗ {LogType.NEWUSER.value}"
         if old_user.rank_id != new_user.rank_id:
+            print("its different")
             if old_user.rank_id == -1:
                 old_role = None
                 new_role = GetRole([new_user.rank_id], interaction.guild)[0]
@@ -67,6 +70,8 @@ class SetPointsCmd(commands.Cog):
                 )
                 return
             try:
+                print(f"old role: {old_role}")
+                print(f"new role: {new_role}")
                 if old_role is not None:
                     await selector.remove_roles(old_role)
                 await selector.add_roles(new_role)

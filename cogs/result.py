@@ -94,6 +94,7 @@ class ResultCmd(commands.Cog):
                 new_points=new_user.points,
                 killed_first=killed_first,
                 is_last=is_last,
+                was_king=was_king,
                 was_first=was_first,
             )
         )

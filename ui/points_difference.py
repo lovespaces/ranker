@@ -10,6 +10,7 @@ class PointsDiff(ui.TextDisplay):
         id: int | None = None,
         killed_first: bool = False,
         is_last: bool = False,
+        was_king: bool = False,
         was_first: bool = False,
     ) -> None:
         super().__init__(content="", id=id)
@@ -24,6 +25,9 @@ class PointsDiff(ui.TextDisplay):
             if is_last:
                 differences += 5
                 sign += "\n- 5 (BOTTOM PENALTY)"
+            if was_king:
+                differences += 15
+                sign += "\n- 15 (TOP 4 PLAYER RANKING LOSS PENALTY)"
             if was_first:
                 differences += 3
                 sign += "\n- 3 (RANKING LOSS PENALTY)"
