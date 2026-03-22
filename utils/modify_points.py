@@ -32,4 +32,4 @@ def AddPoints(userid: int, points: int) -> UsersSc:
                 if user.rank_id != rank:
                     user.rank_id = rank
 
-        return UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username)
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock)
