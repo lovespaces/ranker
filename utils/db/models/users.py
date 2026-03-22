@@ -10,6 +10,6 @@ class Users(Base):
     points: Mapped[int] = mapped_column(nullable=False)
     rank_id: Mapped[int] = mapped_column(ForeignKey("ranks.id"), nullable=False)
     game_username: Mapped[str | None] = mapped_column(Text, unique=True, nullable=True)
-    is_bedrock: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    is_bedrock: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     rank = relationship("Ranks", back_populates="user")
