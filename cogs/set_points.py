@@ -58,7 +58,7 @@ class SetPointsCmd(commands.Cog):
             if old_user is None:
                 await interaction.followup.send(f"❗ {LogType.NOT_EXISTS.value}")
                 return
-        print((f"=== POINTS COMMAND ===\nUSER: {old_user.id}\nRANK: {old_user.rank_id}\nPOINTS: {old_user.points}\n"))
+        print((f"=== POINTS COMMAND ===\nUSER: {old_user.id}\nRANK: {old_user.rank_id}\nPOINTS: {old_user.points}"))
         if points == 0:
             new_user = ResetPoints(selector.id)
         else:
