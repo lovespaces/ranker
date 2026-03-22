@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 # utils import
-from utils.get_user import GetUser, GetUserWithoutCreation
+from utils.get_user import GetUser, GetUserWithoutCreation, GetUserWithMCID
 from utils.get_rank import GetRank, GetRanks
 from utils.get_count import RanksCount
 
@@ -21,29 +21,44 @@ class ProfileCmd(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="profile", description="自分／他プレイヤーのプロフィールを表示")
-    @app_commands.describe(selector="プレイヤーを選ばない場合は自分が対象になります")
+    @app_commands.describe(
+        selector="プレイヤーを選ばない場合は自分が対象になります", mcid="MCIDで検索する場合はこちらをご利用ください"
+    )
     @app_commands.guild_only()
-    async def profile(self, interaction: discord.Interaction, selector: discord.User | discord.Member | None = None):
-        if selector is None:
-            selector = interaction.user
-        if selector.bot:
-            await interaction.response.send_message(
-                "ボットの情報は保存されていません。ユーザを選んでください。", ephemeral=True
-            )
-            return
-        if not isinstance(selector, discord.Member) or not isinstance(interaction.guild, discord.Guild):
-            return
-        await interaction.response.defer(thinking=True, ephemeral=True)
+    async def profile(
+        self,
+        interaction: discord.Interaction,
+        selector: discord.User | discord.Member | None = None,
+        mcid: str | None = None,
+    ):
         new_user = False
-        if interaction.user == selector:
-            user, new_user = GetUser(selector.id)
-        else:
-            user = GetUserWithoutCreation(selector.id)
+        await interaction.response.defer(thinking=True, ephemeral=True)
+        if not isinstance(interaction.guild, discord.Guild):
+            return
+        if mcid is not None:
+            user = GetUserWithMCID(mcid)
             if user is None:
+                await interaction.followup.send(f"❗ {LogType.NOT_EXISTS.value}")
+                return
+        else:
+            if selector is None:
+                selector = interaction.user
+            if selector.bot:
                 await interaction.followup.send(
-                    "❗ 選択したプレイヤーの情報が取得できませんでした。\nデータベースに登録されていません。"
+                    "ボットの情報は保存されていません。ユーザを選んでください。", ephemeral=True
                 )
                 return
+            if not isinstance(selector, discord.Member):
+                return
+            if interaction.user == selector:
+                user, new_user = GetUser(selector.id)
+            else:
+                user = GetUserWithoutCreation(selector.id)
+                if user is None:
+                    await interaction.followup.send(
+                        "❗ 選択したプレイヤーの情報が取得できませんでした。\nデータベースに登録されていません。"
+                    )
+                    return
         rank_count = RanksCount()
         is_highest = False
         is_fourth = False

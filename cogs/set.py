@@ -4,7 +4,7 @@ from discord import app_commands
 
 # utils import
 from utils.get_user import GetUser
-from utils.set_mcid import SetMCID
+from utils.set_profile import SetProfile
 
 from utils.types.log import LogType
 
@@ -26,9 +26,11 @@ class SetCmd(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="set", description="プレイヤーの登録／MCIDの設定")
+    @app_commands.command(name="set", description="プレイヤーの登録／MCIDの設定／BEかどうかの設定")
     @app_commands.describe(
-        selector="プレイヤーを選ばない場合は自分が対象になります", mcid="他メンバーと同じMCIDの設定はできません"
+        selector="プレイヤーを選ばない場合は自分が対象になります",
+        mcid="他メンバーと同じMCIDの設定はできません",
+        is_bedrock="BE勢の場合はTrue",
     )
     @app_commands.guild_only()
     async def set_(
@@ -36,6 +38,7 @@ class SetCmd(commands.Cog):
         interaction: discord.Interaction,
         selector: discord.User | discord.Member | None = None,
         mcid: str | None = None,
+        is_bedrock: bool = False,
     ):
         if selector is None:
             selector = interaction.user
@@ -57,7 +60,7 @@ class SetCmd(commands.Cog):
             return
         await interaction.response.defer(thinking=True)
         user, is_new = GetUser(selector.id)
-        result, new_user = SetMCID(user.id, mcid)
+        result, new_user = SetProfile(user.id, mcid, is_bedrock)
         if not result:
             exist_user = interaction.guild.get_member(new_user.id)
             await interaction.followup.send(

@@ -18,7 +18,4 @@ def GetLeaderboard(limit: int = -1) -> list[UsersSc]:
         users = session.execute(query).scalars().all()
         if not users:
             return []
-        return [
-            UsersSc(id=user.id, points=user.points, rank_id=user.rank_id, game_username=user.game_username)
-            for user in users
-        ]
+        return [UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock) for user in users]

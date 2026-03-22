@@ -13,7 +13,7 @@ class UserSec(ui.Section):
             rank_name = "存在しないランク"
         else:
             rank_name = rank.rank_name
-        if user.game_username is None:
+        if user.game_username is None or user.is_bedrock:
             avatar_url = discord_user.display_avatar.url
         else:
             avatar_url = f"https://mc-heads.net/avatar/{user.game_username}/100"

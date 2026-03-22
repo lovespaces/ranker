@@ -15,7 +15,7 @@ def GetUser(userid: int) -> tuple[UsersSc, bool]:
             session.add(user)
             new_user = True
 
-        return UsersSc(user.id, user.points, user.rank_id, user.game_username), new_user
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock), new_user
 
 
 # 新規登録、でけません。
@@ -25,7 +25,7 @@ def GetUsers(userids: list[int]) -> list[UsersSc] | None:
         users = session.execute(query).scalars().all()
         if users is None:
             return None
-        return [UsersSc(user.id, user.points, user.rank_id, user.game_username) for user in users]
+        return [UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock) for user in users]
 
 
 def GetUserWithoutCreation(userid: int) -> UsersSc | None:
@@ -34,4 +34,14 @@ def GetUserWithoutCreation(userid: int) -> UsersSc | None:
         user = session.execute(query).scalar()
         if user is None:
             return None
-        return UsersSc(user.id, user.points, user.rank_id, user.game_username)
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock)
+
+
+def GetUserWithMCID(mcid: str) -> UsersSc | None:
+    with get_session() as session:
+        query = select(Users).where(Users.game_username == mcid)
+        user = session.execute(query).scalar()
+        if user is None:
+            return None
+
+        return UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock)

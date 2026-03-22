@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 
-def SetMCID(userid: int, mcid: str | None) -> tuple[bool, UsersSc]:
+def SetProfile(userid: int, mcid: str | None, is_bedrock: bool) -> tuple[bool, UsersSc]:
     was_valid = True
 
     with get_session() as session:
@@ -16,10 +16,11 @@ def SetMCID(userid: int, mcid: str | None) -> tuple[bool, UsersSc]:
                 if user is None:
                     raise ValueError("User was not found")
                 user.game_username = mcid
+                user.is_bedrock = is_bedrock
         except IntegrityError:
             was_valid = False
             user = session.execute(select(Users).where(Users.game_username == mcid)).scalar()
             if user is None:
                 raise ValueError("literally how?")
 
-        return was_valid, UsersSc(user.id, user.points, user.rank_id, user.game_username)
+        return was_valid, UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock)

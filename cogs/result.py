@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 # utils import
-from utils.get_user import GetUser
+from utils.get_user import GetUser, GetUserWithMCID
 from utils.modify_points import AddPoints
 from utils.calculate_points import Calc
 from utils.whois_top import GetLeaderboard
@@ -49,6 +49,7 @@ class ResultCmd(commands.Cog):
         interaction: discord.Interaction,
         leaderboard: int,
         selector: discord.User | discord.Member | None = None,
+        mcid: str | None = None,
         hits: int = 0,
         kills: int = 0,
         killed_first: bool = False,
@@ -70,13 +71,20 @@ class ResultCmd(commands.Cog):
             return
         was_first = False
         was_king = False
+        is_new = False
+        if mcid is not None:
+            old_user = GetUserWithMCID(mcid)
+            if old_user is None:
+                await interaction.followup.send(f"❗ {LogType.NOT_EXISTS.value}")
+                return
+        else:
+            old_user, is_new = GetUser(selector.id)
         try:
             top_user = GetLeaderboard(1)[0]
             if selector.id == top_user.id and leaderboard > 1:
                 was_first = True
         except IndexError:
             pass
-        old_user, is_new = GetUser(selector.id)
         if old_user.rank_id >= RanksCount() - 1:
             was_king = True
         points = Calc(hits, kills, killed_first, is_last, was_king, was_first)

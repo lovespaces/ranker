@@ -7,6 +7,7 @@ class UsersSc:
     points: int
     rank_id: int
     game_username: str | None
+    is_bedrock: bool
 
 
 @dataclass

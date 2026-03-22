@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 # utils import
-from utils.get_user import GetUser
+from utils.get_user import GetUser, GetUserWithMCID
 from utils.get_role import GetRole
 from utils.modify_points import AddPoints
 from utils.reset_points import ResetPoints
@@ -30,7 +30,11 @@ class SetPointsCmd(commands.Cog):
     )
     @app_commands.guild_only()
     async def set_points(
-        self, interaction: discord.Interaction, points: int, selector: discord.User | discord.Member | None = None
+        self,
+        interaction: discord.Interaction,
+        points: int,
+        selector: discord.User | discord.Member | None = None,
+        mcid: str | None = None,
     ):
         if selector is None:
             selector = interaction.user
@@ -46,19 +50,23 @@ class SetPointsCmd(commands.Cog):
             await interaction.response.send_message("❗ ランク管理ができるロールを持っていません")
             return
         await interaction.response.defer(thinking=True)
-        old_user, is_new = GetUser(selector.id)
+        is_new = False
+        if mcid is None:
+            old_user, is_new = GetUser(selector.id)
+        else:
+            old_user = GetUserWithMCID(mcid)
+            if old_user is None:
+                await interaction.followup.send(f"❗ {LogType.NOT_EXISTS.value}")
+                return
         if points == 0:
             new_user = ResetPoints(selector.id)
         else:
             new_user = AddPoints(selector.id, points)
-        print(new_user.rank_id)
-        print(old_user.rank_id)
         difference = new_user.points - old_user.points
         content = f"{selector.mention} のポイントを変更しました。\n```{old_user.points} -> {new_user.points} ({'+' if difference > 0 else '-' if difference < 0 else '±'} {abs(difference)})```"
         if is_new:
             content = f"\n❗ {LogType.NEWUSER.value}"
         if old_user.rank_id != new_user.rank_id:
-            print("its different")
             if old_user.rank_id == -1:
                 old_role = None
                 new_role = GetRole([new_user.rank_id], interaction.guild)[0]
@@ -70,8 +78,6 @@ class SetPointsCmd(commands.Cog):
                 )
                 return
             try:
-                print(f"old role: {old_role}")
-                print(f"new role: {new_role}")
                 if old_role is not None:
                     await selector.remove_roles(old_role)
                 await selector.add_roles(new_role)
