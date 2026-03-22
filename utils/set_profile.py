@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 
-def SetProfile(userid: int, mcid: str | None, is_bedrock: bool) -> tuple[bool, UsersSc]:
+def SetProfile(userid: int, mcid: str | None, is_bedrock: bool = False) -> tuple[bool, UsersSc]:
     was_valid = True
 
     with get_session() as session:
