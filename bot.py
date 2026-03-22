@@ -24,7 +24,7 @@ class Bot(commands.Bot):
         )
 
     async def on_ready(self) -> None:
-        print("take care")
+        print("Take care.")
 
     async def setup_hook(self):
         cogs_folder = f"{os.path.abspath(os.path.dirname(__file__))}/cogs"

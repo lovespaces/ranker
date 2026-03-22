@@ -8,7 +8,6 @@ from sqlalchemy import select, func
 
 
 def AddPoints(userid: int, points: int) -> UsersSc:
-    print("== ADD POINTS ==")
     GetUser(userid)
 
     with get_session() as session:
@@ -16,11 +15,8 @@ def AddPoints(userid: int, points: int) -> UsersSc:
         user = session.execute(query).scalar()
         if user is None:
             raise ValueError("User was not found.")
-        print(f"> ADDING {points} POINTS ...")
         user.points += points
-        print(f"> USER CURRENT POINTS: {user.points}")
         if user.points < 0:
-            print("> RESETTING USERS POINTS ...")
             user.points = 0
 
         query = select(func.max(Ranks.id)).where(Ranks.required_points <= user.points, Ranks.id != -1)
@@ -28,12 +24,10 @@ def AddPoints(userid: int, points: int) -> UsersSc:
         count = RanksCount() - 1
         if rank is not None:
             if user.rank_id != rank:
-                print("> RANK IS DIFFERENT")
                 if rank == count:
                     if IsFourth(rank):
                         user.rank_id = rank
                 else:
                     user.rank_id = rank
 
-        print("== ADD POINTS ==")
         return UsersSc(user.id, user.points, user.rank_id, user.game_username, user.is_bedrock)

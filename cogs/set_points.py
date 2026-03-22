@@ -58,13 +58,10 @@ class SetPointsCmd(commands.Cog):
             if old_user is None:
                 await interaction.followup.send(f"❗ {LogType.NOT_EXISTS.value}")
                 return
-        print((f"=== POINTS COMMAND ===\nUSER: {old_user.id}\nRANK: {old_user.rank_id}\nPOINTS: {old_user.points}"))
         if points == 0:
             new_user = ResetPoints(selector.id)
         else:
             new_user = AddPoints(selector.id, points)
-        print(f"NEW POINTS: {new_user.points}\n")
-        print(f"AFTER CALCULATE RANK: {new_user.rank_id}\n=== POINTS COMMAND ===")
         difference = new_user.points - old_user.points
         content = f"{selector.mention} のポイントを変更しました。\n```{old_user.points} -> {new_user.points} ({'+' if difference > 0 else '-' if difference < 0 else '±'} {abs(difference)})```"
         if is_new:

@@ -87,10 +87,8 @@ class ResultCmd(commands.Cog):
             pass
         if old_user.rank_id >= RanksCount() - 1:
             was_king = True
-        print((f"=== RESULT COMMAND ===\nUSER: {old_user.id}\nRANK: {old_user.rank_id}\nPOINTS: {old_user.points}"))
         points = Calc(hits, kills, killed_first, is_last, was_king, was_first)
         new_user = AddPoints(selector.id, points)
-        print(f"NEW POINTS: {new_user.points}")
         view = BaseLayout()
         container = discord.ui.Container()
         container.add_item(UserSec(old_user, interaction.guild))
@@ -109,7 +107,6 @@ class ResultCmd(commands.Cog):
         )
         container.add_item(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
         is_demote = False
-        print(f"AFTER CALCULATE RANK: {new_user.rank_id}\n=== RESULT COMMAND ===")
         if old_user.rank_id != new_user.rank_id:
             if old_user.rank_id == -1:
                 old_role = None
